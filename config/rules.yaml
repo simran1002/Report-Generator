@@ -1,0 +1,18 @@
+default:
+  rules:
+    - output_field: outfield1
+      expression: field1 + field2
+      description: Concatenate field1 and field2
+    - output_field: outfield2
+      expression: refdata1
+      description: Use refdata1 directly
+    - output_field: outfield3
+      expression: refdata2 + refdata3
+      description: Concatenate refdata2 and refdata3
+    - output_field: outfield4
+      expression: field3 * max(field5, refdata4)
+      description: Multiply field3 by the maximum of field5 and refdata4
+    - output_field: outfield5
+      expression: max(field5, refdata4)
+      description: Maximum of field5 and refdata4
+  updated_at: '2025-04-26T18:59:31+05:30'

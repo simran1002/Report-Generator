@@ -41,7 +41,7 @@ class Schedule(BaseModel):
     id: str
     name: str
     schedule_type: ScheduleType
-    expression: str  # Cron expression or interval in seconds
+    expression: str
     enabled: bool = True
     last_run: Optional[datetime] = None
     next_run: Optional[datetime] = None
@@ -50,10 +50,10 @@ class Schedule(BaseModel):
 
 
 class ReportGenerationRequest(BaseModel):
-    input_file: Optional[str] = None  # If None, use the latest uploaded input file
-    reference_file: Optional[str] = None  # If None, use the latest uploaded reference file
+    input_file: Optional[str] = None 
+    reference_file: Optional[str] = None  
     output_format: FileFormat = FileFormat.CSV
-    rule_set_id: Optional[str] = None  # If None, use the default rule set
+    rule_set_id: Optional[str] = None 
 
 
 class ReportStatus(str, Enum):

@@ -13,13 +13,10 @@ from tests.test_auth import get_token_headers
 @pytest.fixture(scope="module")
 def test_input_file():
     """Create a test input file."""
-    # Ensure the upload directory exists
     os.makedirs(settings.UPLOAD_DIR, exist_ok=True)
     
-    # Create a test input file
     filename = os.path.join(settings.UPLOAD_DIR, "input_test.csv")
     
-    # Create test data
     data = {
         "field1": ["A", "B", "C"],
         "field2": ["X", "Y", "Z"],
@@ -30,7 +27,6 @@ def test_input_file():
         "refkey2": ["keyA", "keyB", "keyC"]
     }
     
-    # Write to CSV
     pd.DataFrame(data).to_csv(filename, index=False)
     
     yield filename
@@ -39,13 +35,10 @@ def test_input_file():
 @pytest.fixture(scope="module")
 def test_reference_file():
     """Create a test reference file."""
-    # Ensure the upload directory exists
     os.makedirs(settings.UPLOAD_DIR, exist_ok=True)
     
-    # Create a test reference file
     filename = os.path.join(settings.UPLOAD_DIR, "reference_test.csv")
     
-    # Create test data
     data = {
         "refkey1": ["key1", "key2", "key3"],
         "refdata1": ["data1", "data2", "data3"],
@@ -55,7 +48,6 @@ def test_reference_file():
         "refdata4": [5.0, 15.0, 25.0]
     }
     
-    # Write to CSV
     pd.DataFrame(data).to_csv(filename, index=False)
     
     yield filename
@@ -65,34 +57,28 @@ def test_generate_report(test_app: TestClient, test_input_file, test_reference_f
     """Test generating a report."""
     headers = get_token_headers(test_app)
     
-    # Request body
     request = {
         "input_file": os.path.basename(test_input_file),
         "reference_file": os.path.basename(test_reference_file),
         "output_format": "csv",
-        "rule_set_id": None  # Use default rule set
+        "rule_set_id": None 
     }
     
-    # Generate report
     response = test_app.post("/api/v1/reports/generate", json=request, headers=headers)
     assert response.status_code == 200
     
-    # Check response
     report_id = response.json()["id"]
     assert response.json()["status"] == "completed"
     assert response.json()["input_file"] == os.path.basename(test_input_file)
     assert response.json()["reference_file"] == os.path.basename(test_reference_file)
     
-    # Get report metadata
     response = test_app.get(f"/api/v1/reports/{report_id}", headers=headers)
     assert response.status_code == 200
     assert response.json()["id"] == report_id
     
-    # Download report
     response = test_app.get(f"/api/v1/reports/{report_id}/download", headers=headers)
     assert response.status_code == 200
     
-    # Verify content type
     assert response.headers["content-type"] == "application/octet-stream"
 
 
@@ -100,7 +86,6 @@ def test_generate_report_invalid_file(test_app: TestClient):
     """Test generating a report with invalid files."""
     headers = get_token_headers(test_app)
     
-    # Request body with non-existent files
     request = {
         "input_file": "nonexistent.csv",
         "reference_file": "nonexistent.csv",
@@ -108,7 +93,6 @@ def test_generate_report_invalid_file(test_app: TestClient):
         "rule_set_id": None
     }
     
-    # Generate report
     response = test_app.post("/api/v1/reports/generate", json=request, headers=headers)
     assert response.status_code == 404
     assert "not found" in response.json()["detail"]

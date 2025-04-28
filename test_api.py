@@ -2,7 +2,6 @@ import json
 import requests
 import time
 
-# API base URL
 BASE_URL = "http://localhost:8000/api/v1"
 
 def login(username="user", password="user"):
@@ -101,13 +100,11 @@ def get_rules(token):
         return None
 
 def main():
-    # Login
     print("Logging in...")
     token = login()
     if not token:
         return
     
-    # List files
     print("\nListing input files:")
     input_files = list_files(token, "input")
     if not input_files:
@@ -120,14 +117,12 @@ def main():
         print("No reference files found")
         return
     
-    # Select the first input and reference file
     input_file = input_files[0]["filename"]
     reference_file = reference_files[0]["filename"]
     
     print(f"\nUsing input file: {input_file}")
     print(f"Using reference file: {reference_file}")
     
-    # Get rules
     print("\nGetting transformation rules:")
     rules = get_rules(token)
     if rules:
@@ -136,7 +131,6 @@ def main():
         for rule in rules["rules"]:
             print(f"  - {rule['output_field']} = {rule['expression']}")
     
-    # Generate report
     print("\nGenerating report...")
     report = generate_report(token, input_file, reference_file)
     if not report:
@@ -146,7 +140,6 @@ def main():
     print(f"Report generated with ID: {report_id}")
     print(f"Status: {report['status']}")
     
-    # Wait for report to complete if it's still processing
     if report["status"] == "processing":
         print("Waiting for report to complete...")
         max_attempts = 10
@@ -165,7 +158,6 @@ def main():
             attempts += 1
             print(f"Still processing... (attempt {attempts}/{max_attempts})")
     
-    # Download report
     print("\nDownloading report...")
     output_path = f"./reports/downloaded_report_{report_id}.csv"
     download_report(token, report_id, output_path)

@@ -9,10 +9,8 @@ from pydantic import ValidationError
 
 from app.core.config import settings
 
-# Password hashing
 pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
 
-# OAuth2 scheme
 oauth2_scheme = OAuth2PasswordBearer(tokenUrl=f"{settings.API_V1_STR}/auth/login")
 
 def verify_password(plain_password: str, hashed_password: str) -> bool:
@@ -36,7 +34,6 @@ def create_access_token(subject: Union[str, Any], expires_delta: Optional[timede
 
 async def get_current_user(token: str = Depends(oauth2_scheme)):
     """Get the current user from the token."""
-    # Import here to avoid circular imports
     from app.models.user import TokenData, User
     from app.services.user_service import get_user_by_username
     
@@ -62,7 +59,7 @@ async def get_current_user(token: str = Depends(oauth2_scheme)):
 
 async def get_current_active_user(current_user = Depends(get_current_user)):
     """Check if the current user is active."""
-    # Import here to avoid circular imports
+
     from app.models.user import User
     
     if not current_user.is_active:
@@ -71,7 +68,7 @@ async def get_current_active_user(current_user = Depends(get_current_user)):
 
 async def get_current_active_superuser(current_user = Depends(get_current_user)):
     """Check if the current user is a superuser."""
-    # Import here to avoid circular imports
+
     from app.models.user import User
     
     if not current_user.is_superuser:

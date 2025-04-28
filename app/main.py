@@ -14,7 +14,6 @@ app = FastAPI(
     openapi_url=f"{settings.API_V1_STR}/openapi.json",
 )
 
-# Set up CORS
 app.add_middleware(
     CORSMiddleware,
     allow_origins=settings.CORS_ORIGINS,
@@ -23,11 +22,9 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-# Add custom middleware
 app.add_middleware(LoggingMiddleware)
 app.add_middleware(MetricsMiddleware)
 
-# Include API router
 app.include_router(api_router, prefix=settings.API_V1_STR)
 
 @app.get("/", include_in_schema=False)

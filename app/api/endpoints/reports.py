@@ -30,8 +30,6 @@ async def create_report(
     Returns:
         ReportMetadata: Metadata about the generated report
     """
-    # Generate the report (this could be a long-running task)
-    # In a production environment, this would be offloaded to a task queue
     report_metadata = generate_report(request, current_user.username)
     return report_metadata
 

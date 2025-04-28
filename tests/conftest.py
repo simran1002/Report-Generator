@@ -5,7 +5,6 @@ from typing import Generator
 import pytest
 from fastapi.testclient import TestClient
 
-# Add the parent directory to the path so we can import the app
 sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
 
 from app.core.config import settings
@@ -44,12 +43,9 @@ def test_dirs() -> Generator:
     """
     Create test directories for uploads and reports.
     """
-    # Create test directories
     os.makedirs(settings.UPLOAD_DIR, exist_ok=True)
     os.makedirs(settings.REPORTS_DIR, exist_ok=True)
     os.makedirs(settings.CONFIG_DIR, exist_ok=True)
     
     yield
     
-    # Cleanup is not performed to avoid deleting user files
-    # In a real test environment, we would use temporary directories

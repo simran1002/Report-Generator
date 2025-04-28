@@ -5,7 +5,6 @@ from fastapi import Request, Response
 from prometheus_client import Counter, Histogram
 from starlette.middleware.base import BaseHTTPMiddleware
 
-# Define metrics
 REQUEST_COUNT = Counter(
     "http_requests_total",
     "Total HTTP Requests",
@@ -38,17 +37,13 @@ class MetricsMiddleware(BaseHTTPMiddleware):
     async def dispatch(
         self, request: Request, call_next: Callable
     ) -> Response:
-        # Start timer
         start_time = time.time()
         
-        # Get endpoint for metrics
         endpoint = request.url.path
         
-        # Process the request
         try:
             response = await call_next(request)
             
-            # Record metrics
             REQUEST_COUNT.labels(
                 method=request.method,
                 endpoint=endpoint,
@@ -63,7 +58,6 @@ class MetricsMiddleware(BaseHTTPMiddleware):
             return response
             
         except Exception as e:
-            # Record metrics for failed requests
             REQUEST_COUNT.labels(
                 method=request.method,
                 endpoint=endpoint,
@@ -75,5 +69,4 @@ class MetricsMiddleware(BaseHTTPMiddleware):
                 endpoint=endpoint
             ).observe(time.time() - start_time)
             
-            # Re-raise the exception
             raise

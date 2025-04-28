@@ -69,11 +69,7 @@ async def validate_rule(
     Returns:
         dict: Validation result
     """
-    # This is a simplified validation
-    # In a production environment, this would be more robust
     try:
-        # Check if the expression is valid
-        # For simplicity, we just check if it contains basic operations
         valid_operators = ["+", "-", "*", "/", "max", "min"]
         valid = any(op in rule.expression for op in valid_operators)
         

@@ -19,7 +19,6 @@ def test_upload_file(test_app: TestClient, test_csv_file):
     """Test uploading a file."""
     headers = get_token_headers(test_app)
     
-    # Upload file
     filename, file_content = test_csv_file
     response = test_app.post(
         "/api/v1/files/upload/input",
@@ -31,15 +30,12 @@ def test_upload_file(test_app: TestClient, test_csv_file):
     assert response.json()["status"] == "success"
     assert response.json()["file_type"] == "input"
     
-    # Get the uploaded filename
     uploaded_filename = response.json()["filename"]
     
-    # List files
     response = test_app.get("/api/v1/files/list/input", headers=headers)
     assert response.status_code == 200
     assert len(response.json()) > 0
     
-    # Download file
     response = test_app.get(f"/api/v1/files/download/{uploaded_filename}", headers=headers)
     assert response.status_code == 200
     assert response.headers["content-type"] == "application/octet-stream"
@@ -49,7 +45,6 @@ def test_upload_invalid_file_type(test_app: TestClient, test_csv_file):
     """Test uploading a file with an invalid file type."""
     headers = get_token_headers(test_app)
     
-    # Upload file with invalid file type
     filename, file_content = test_csv_file
     response = test_app.post(
         "/api/v1/files/upload/invalid",

@@ -9,9 +9,8 @@ class Settings(BaseSettings):
     PROJECT_NAME: str = "Report Generator"
     API_V1_STR: str = "/api/v1"
     
-    # SECURITY
     SECRET_KEY: str = os.getenv("SECRET_KEY", "supersecretkey")
-    ACCESS_TOKEN_EXPIRE_MINUTES: int = 60 * 24 * 8  # 8 days
+    ACCESS_TOKEN_EXPIRE_MINUTES: int = 60 * 24 * 8 
     
     # CORS
     CORS_ORIGINS: List[AnyHttpUrl] = []
@@ -30,20 +29,16 @@ class Settings(BaseSettings):
     REPORTS_DIR: str = os.path.join(BASE_DIR, "reports")
     CONFIG_DIR: str = os.path.join(BASE_DIR, "config")
     
-    # Make sure directories exist
     os.makedirs(UPLOAD_DIR, exist_ok=True)
     os.makedirs(REPORTS_DIR, exist_ok=True)
     os.makedirs(CONFIG_DIR, exist_ok=True)
     
-    # FILE PATHS
     RULES_FILE: str = os.path.join(CONFIG_DIR, "rules.yaml")
     SCHEDULES_FILE: str = os.path.join(CONFIG_DIR, "schedules.yaml")
     
-    # DATABASE
     DATABASE_URL: str = os.getenv("DATABASE_URL", "sqlite:///./report_generator.db")
     
-    # PERFORMANCE
-    CHUNK_SIZE: int = 100000  # Number of rows to process at once
+    CHUNK_SIZE: int = 100000 
     
     model_config = SettingsConfigDict(case_sensitive=True)
 
